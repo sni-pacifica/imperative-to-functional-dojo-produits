@@ -28,11 +28,14 @@ const logBlue = Log.logWithColor("#5588ff");
 // logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLotsAvecDecote(produits, ["lot1-XYZ"]));
 
 // Etape 04
-import { Produit, produits } from "./src/01/ModelProduit";
-import { prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy } from "./src/04/ModelProduit";
-logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy(produits, ["lot1-XYZ"]));
+// import { Produit, produits } from "./src/01/ModelProduit";
+// import { prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy } from "./src/04/ModelProduit";
+// logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy(produits, ["lot1-XYZ"]));
 
-/*
+// Etape functional
+import {prixTotalEnsembleProduitsPourLotsAvecDecoteAsync} from "./src/functional/ModelProduit";
+import {ProduitsService} from "./src/services/ProduitsService";
+
 let service = new ProduitsService();
 const computation = prixTotalEnsembleProduitsPourLotsAvecDecoteAsync(
   service.getProduits(), ["lot1-XYZ"]
@@ -41,4 +44,4 @@ const computation = prixTotalEnsembleProduitsPourLotsAvecDecoteAsync(
 computation.subscribe(result => {
   logBlue("La valeur totale est : " + result);
 });
-*/
+
