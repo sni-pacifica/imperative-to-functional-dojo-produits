@@ -1,6 +1,4 @@
-
-
-import { Log } from "./Log";
+import {Log} from "./src/Log";
 
 Log.log("Hello", "#ff8855");
 Log.log("World !");
@@ -35,9 +33,9 @@ const logBlue = Log.logWithColor("#5588ff");
 // import { prixTotalEnsembleProduitsPourLotsAvecDecoteAsync } from "./ModelProduitAsync00";
 // logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLotsAvecDecoteAsync(produits, ["lot1-XYZ"]));
 
-import { Produit, produits, prixTotalEnsembleProduits } from "./ModelProduit01";
-import { prixTotalEnsembleProduitsPourLotsAvecDecoteAsync } from "./ModelProduitAsyncGood";
-import { ProduitsService } from "./services/ProduitsService"
+import {Produit, produits, prixTotalEnsembleProduits} from "./src/ModelProduit01";
+import {prixTotalEnsembleProduitsPourLotsAvecDecoteAsync} from "./src/ModelProduitAsyncGood";
+import {ProduitsService} from "./src/services/ProduitsService"
 
 let service = new ProduitsService();
 const computation = prixTotalEnsembleProduitsPourLotsAvecDecoteAsync(
