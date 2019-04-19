@@ -16,14 +16,14 @@
 
 Nous avons abordés plusieurs fois les paradigmes fonctionnels lors des sessions.
 
-Nous avons découvert un certain nombre d'aspects et mis en oeuvre quelques techniques
-de programmation à travers divers exemples et technos.
+Nous avons découvert un certain nombre d'aspects (immutabilité, effets de bords...) et mis en oeuvre quelques techniques
+à travers divers exemples et technos (composition de fonction, monades, rxjs...).
 
-Aujourd'hui, un peu de révisions... from scratch !
+Aujourd'hui, on rebalaye le modèle de pensée fonctionnel à travers un exemple "trivial" !
 
 ----
 
-C'est le moment de dire "Attend, stop, là ce point là, je saisi pas bien..."
+C'est *exactement* le moment de dire "Attend, stop, là ce point là, je ne saisi vraiment pas bien..."
 
 ---
 
@@ -31,44 +31,76 @@ C'est le moment de dire "Attend, stop, là ce point là, je saisi pas bien..."
 
 ----
 
-Quid du rapport entre le programme **tel qu'il est écrit**, et la façon **dont il s'execute** ?
+Parce que en réalité, la PF, c'est **avant tout le reste** un **moyen de contrôler le flot d'execution** de notre programme, mais de façon "transparente", sans *goto*, sans *if*, sans ...
 
 ----
 
-- La majorité des programmes sont écrit dans un langage
- **impératif et procédural**, **mono-threadé**.
+La programmation fonctionnelle nous invite à décrire et 
+mettre en évidence le **"quoi faire"**
+avant le **"comment le faire"**.
+
+----
+
+## Programmation procédurale : le mode linéaire
+
+----
+
+C'est le mode choisit pour apprendre à programmer - y compris et surtout chez les jeunes à travers Scratch et co - et c'est le mode qui perdure ensuite.
+
+----
+
+Ce mode de programmation impose une **modèle de pensée** beaucoup trop bas-niveau, qui s'**il permet de rapidement obtenir des résultats** n'est rééllement adapté (comprendre "qui ne se transforme pas en *[big ball of mud](http://www.laputan.org/mud/mud.html#BigBallOfMud)* rapidement") qu'à **un cas particulier de programme**, le traitement séquentiel mono-threadé.
+
+----
+
+Pourquoi ? Il faut se pencher sur le rapport entre le programme **tel qu'il est écrit**, et la façon **dont il s'execute** ?
+
+----
  
 - le programme possède un **point d'entrée**, se **déroule**, puis se **termine**
 
-----
-
 - "déroule" : 
     - chaque instruction est **executée immédiatement**...
-    - ce qui **altère l'état de a mémoire** ...
-    - instruction après instruction...
+    - ce qui **altère l'état de la mémoire** ...
+    - et ceci, instruction après instruction...
 
-- (debut) -> instruction -> instruction -> instruction -> instruction -> (fin)
+----
+
+(debut) -> instruction -> instruction -> instruction -> instruction -> (fin)
+
 ----
 
 Un programme procédural est donc à l'image de la **carte perforée** une 
-**succession d'ordres ordonnés, linéaires, déroulé par un automate possédant un état**
+**succession d'ordres ordonnés, linéaires, déroulé par un automate possédant un état qui évolue**
 
 ----
 
-Donc, ce qui est "écrit" = "ce qui va s'executer"
+Donc, **ce qui est "écrit"** = **"ce qui va s'executer"**
 
-J'appelle souvent çà coder en mode "reverse debugger" : ce mode de programmation
-    impose un mode de pensée "étape par étape"
+----
+
+Ce qui impacte évidemment la façon dont on raisonne et on code : j'appelle souvent ça coder en mode "reverse debugger" ... on raisonne en permanence en mode "étape par étape" en présuposant d'un mode d'execution linéaire
+
+Et donc, un mode de pensée linéaire...
 
 ----
 
 Avantage(s) ? *Grosso-modo*, un seul... Un contrôle "manuel" de l'execution, où l'on maitrise
-exactement le flot d'execution, permettant aux experts de "tuner" finement
-les comportements pour mettre en oeuvre tel ou telle optimisation technique.
+exactement le flot d'execution et les états successifs de la machine, permettant aux experts de "tuner" finement
+les comportements pour mettre en oeuvre telle ou telle optimisation technique.
 
 ----
 
-L'ennui et que cette approche "code" == "execution" ne "scale" absolument pas bien du tout.
+L'ennui et que cette approche "code" == "execution" ne "scale" absolument pas bien du tout, ni dans le temps ni dans l'espace
+(plusieurs développeurs, transmission de la connaissance...)
+
+----
+
+Chaque développeurs instille "son" mode de pensée linéaire dans le code (d'où les querelles incessantes sur le style de coding...) ; et nous sommes tous très différents sur cet aspect.
+
+----
+
+Le moindre "obstacle" sur le chemin provoque des détours et des contorsions qui grèvent lourdement la maintenabilité.
 
 ----
 
@@ -79,7 +111,8 @@ L'ennui et que cette approche "code" == "execution" ne "scale" absolument pas bi
 
 ----
 
-Pas convaincu ? Explorons un petit example en mode 'procédural' à l'ancienne !
+Allez, assez de théorie : lançons nous dans l'écriture d'un petit
+programme "trivial" en mode procédural
 
 ----
 
