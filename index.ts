@@ -9,31 +9,28 @@ const logBlue = Log.logWithColor("#5588ff");
   Appellez le code à executer ci-dessous !
 */
 
-// Etape 00, example.
-import { Produit, produits, total } from "./src/00/ModelProduit";
-logBlue("La valeur totale est : " + total(produits));
+// Etape 00
+// import { Produit, produits, total } from "./src/00/ModelProduit";
+// logBlue("La valeur totale est : " + total(produits));
 
-// import { Produit, produits, prixTotalEnsembleProduits } from "./ModelProduit00_clean";
-// logBlue("La valeur totale est : " + prixTotalEnsembleProduits(produits));
-
-// import { Produit, produits, prixTotalEnsembleProduits } from "./ModelProduit01";
+// Etape 01
+// import { Produit, produits, prixTotalEnsembleProduits } from "./src/01/ModelProduit";
 // logBlue("La valeur totale est : " + prixTotalEnsembleProduits(produits, "lot1-XYZ"));
 
-// import { Produit, produits, prixTotalEnsembleProduits } from "./ModelProduit01";
-// import { prixTotalEnsembleProduitsPourLots } from "./ModelProduit02";
+// Etape 02
+// import { Produit, produits } from "./src/01/ModelProduit";
+// import { prixTotalEnsembleProduitsPourLots } from "./src/02/ModelProduit";
 // logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLots(produits, ["lot1-XYZ"]));
 
-// import { Produit, produits, prixTotalEnsembleProduits } from "./ModelProduit01";
-// import { prixTotalEnsembleProduitsPourLotsAvecDecote } from "./ModelProduit03";
+// Etape 03
+// import { Produit, produits } from "./src/01/ModelProduit";
+// import { prixTotalEnsembleProduitsPourLotsAvecDecote } from "./src/03/ModelProduit";
 // logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLotsAvecDecote(produits, ["lot1-XYZ"]));
 
-// import { Produit, produits, prixTotalEnsembleProduits } from "./ModelProduit01";
-// import { prixTotalEnsembleProduitsPourLotsAvecDecoteAsync } from "./ModelProduitAsync00";
-// logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLotsAvecDecoteAsync(produits, ["lot1-XYZ"]));
-
-// import {Produit, produits, prixTotalEnsembleProduits} from "./src/ModelProduit01";
-// import {prixTotalEnsembleProduitsPourLotsAvecDecoteAsync} from "./src/ModelProduitAsyncGood";
-// import {ProduitsService} from "./src/services/ProduitsService"
+// Etape 04
+import { Produit, produits } from "./src/01/ModelProduit";
+import { prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy } from "./src/04/ModelProduit";
+logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy(produits, ["lot1-XYZ"]));
 
 /*
 let service = new ProduitsService();

@@ -6,7 +6,7 @@ const priceService = new PriceService();
 /*
   ATTENTION ! Implémentation hautement buggée (potentiellement)
  */
-export const prixTotalEnsembleProduitsPourLotsAvecDecoteAsync = (
+export const prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy = (
   produits: Array<Produit> = [],
   lots: Array<string> = []
 ) => {
