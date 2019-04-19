@@ -41,6 +41,10 @@ avant le **"comment le faire"**.
 
 ----
 
+![](medias/wat.jpg) 
+
+----
+
 ## Programmation procédurale : le mode linéaire
 
 ----
@@ -53,16 +57,18 @@ Ce mode de programmation impose une **modèle de pensée** beaucoup trop bas-niv
 
 ----
 
-Pourquoi ? Il faut se pencher sur le rapport entre le programme **tel qu'il est écrit**, et la façon **dont il s'execute** ?
+Pourquoi ? Il faut se pencher sur le rapport entre le programme 
+**tel qu'il est écrit**, et la façon **dont il s'execute**.
 
 ----
  
 - le programme possède un **point d'entrée**, se **déroule**, puis se **termine**
 
 - "déroule" : 
+
     - chaque instruction est **executée immédiatement**...
     - ce qui **altère l'état de la mémoire** ...
-    - et ceci, instruction après instruction...
+    - et ceci, **instruction après instruction**...
 
 ----
 
@@ -79,7 +85,10 @@ Donc, **ce qui est "écrit"** = **"ce qui va s'executer"**
 
 ----
 
-Ce qui impacte évidemment la façon dont on raisonne et on code : j'appelle souvent ça coder en mode "reverse debugger" ... on raisonne en permanence en mode "étape par étape" en présuposant d'un mode d'execution linéaire
+Ce qui impacte évidemment la façon dont on raisonne et on code : 
+j'appelle souvent ça coder en mode "reverse debugger" ... 
+on raisonne en permanence en mode "étape par étape",
+en présuposant d'un mode d'execution linéaire, d'un état tout juste précédent..
 
 Et donc, un mode de pensée linéaire...
 
@@ -96,53 +105,52 @@ L'ennui et que cette approche "code" == "execution" ne "scale" absolument pas bi
 
 ----
 
-Chaque développeurs instille "son" mode de pensée linéaire dans le code (d'où les querelles incessantes sur le style de coding...) ; et nous sommes tous très différents sur cet aspect.
+En sus, chaque développeurs instille "son" mode de pensée linéaire 
+dans le code (d'où les querelles incessantes sur le style de coding...); 
+et nous sommes tous +/- différents sur cet aspect !
+
+<small>Valable pour votre moi *du présent* et votre moi *du futur* aussi !</small>
 
 ----
 
-Le moindre "obstacle" sur le chemin provoque des détours et des contorsions qui grèvent lourdement la maintenabilité.
+En sus, en mode linéaire, le moindre "obstacle" sur le chemin provoque des détours et des contorsions qui grèvent lourdement la maintenabilité :
 
 ----
 
 - *Branchement conditionnels, boucles* ? "Pyramid of doom"
 - *Asynchronisme* ? Casse le flot des programmes (Pyramid of doom, again).
 - *Multi-threading* ? Atroce à gérer correctement.
-- *Complexité fonctionnelle* ? Code spagghetti à la longue.
+- *Complexité fonctionnelle* ? Code spagghetti, à la longue.
 
 ----
 
-Allez, assez de théorie : lançons nous dans l'écriture d'un petit
-programme "trivial" en mode procédural
+Allez, assez de théorie : travaillons un peu sur un petit
+programme "trivial" en **mode procédural**
 
 ----
 
-https://stackblitz.com/edit/typescript-bufz3d
+https://stackblitz.com/edit/typescript-qfsv5t
 
-ModelProduit.ts
-
-cf. fonction 'total'
+index.ts
 
 ----
 
-*Le programme est perfectible, oui. Il est juste là pour illustrer 
-le propos sur le modèle d'execution !*
+*DISCLAIMER : Les programmes présentés sont perfectibles, oui, je sais.*
+
+*DISCLAIMER2 : Toutes les pratiques de clean code ne sont pas appliquées, le but étant
+de mettre en avant du code '~~averel~~ average  procedural code'.*
 
 ----
 
-Juste ici je pense que vous êtes d'accord pour me dire que "ça va".
-
-----
-
-Exo : "Proprifier" le code au maximum pour avoir quelque chose d'un peu plus 'clean'
-(mais toujours avec la boucle for, pas de 'map' qui n'est pas procédural !) 
+Etape 00 : Jusqu'ici, je pense que vous êtes d'accord pour me dire que "ça va".
 
 ----
 
 Evol !
 
 > Les produits sont rattaché à un lot (string).
-> La fonction de calcul doit me permettre de faire la somme **pour un lot donné**
-> passé en paramètre.
+> La fonction de calcul doit me permettre de faire la somme (comme précédemment),
+> mais **pour un lot donné**, passé en paramètre en plus du tableau de produits.
 
 <small>A vous de jouer...</small>
 
@@ -150,7 +158,7 @@ Evol !
 
 Evol !
 
-> La fonction de calcul doit me permettre de faire la somme **pour n lots donnés**
+> La fonction de calcul doit me permettre de faire la somme **pour *n* lots donnés**
 > passés en paramètre.
 
 <small>A vous de jouer...</small>
@@ -160,8 +168,8 @@ Evol !
 Evol !
 
 > Lors du calcul, on doit appliquer une décote sur certains lots
-> - 10% sur les lots dont le numéro finit par -ABC
-> - 15% sur les lots dont le numéro finit par -XYZ
+> - 10% de valeur sur les lots dont le numéro finit par -ABC
+> - 15% de valeur sur les lots dont le numéro finit par -XYZ
 
 
 <small>A vous de jouer...</small>
@@ -174,13 +182,17 @@ Evol !
 
 Evol !
 
-> Le prix de chaque produit est renvoyé dynamiquement par un appel au backend
+> Le prix de chaque produit est renvoyé dynamiquement par un appel au backend,
 > il faut lui passer la ref du produit et il renvoit le prix
 
 ----
 
-- A vous de jouer, le service est `PriceService`, à instancier à la main puis à appeller...
-- Faire *simple*, ne pas "tout casser" !
+A vous de jouer !
+
+- Un service `PriceService`, retourne un prix random ; 
+  à instancier à la main puis à appeller dans le code
+- Attention, essayer d'ajouter l'appel dans le code de 
+ façon *simple* (donc... erronée..), ne surtout pas "tout casser" !
 
 ----
 
@@ -190,23 +202,40 @@ Présentation d'une solution (imparfaite)...
 
 Bon...
 
-Le code résultant :
+Le code résultant (src/04/ModelProduit.ts):
 - 'semble' marcher (en fait non)
-- devient un plat de nouilles...
-- chaque évolution menace le chateau de carte...
-- code peut explicite ; il faut lire / relire pour en saisir le sens "caché"
+- est vraiment en train de devenir un plat de nouilles...
+- on voit bien que chaque évolution menace la stabilité du château de carte...
+- code peu explicite ; il faut lire / relire pour en saisir le sens "caché"
 
 ----
 
-Jusqu'à l'introduction de l'asynchronisme, la complexité était gérable... en poussant
-quelques pratiques de clean-code, on pouvrait minimiser de nombreux aspects.
+*Jusqu'à l'introduction de l'asynchronisme*, la complexité était *gérable*... 
+en poussant quelques pratiques de clean-code sur le code existant,
+on *pouvait* minimiser de nombreux aspects.
 
-Mais le problème restant, l'**execution synchrone du code** et le **pilotage par l'algo pas à pas** montre immédiatement
-ses limites dans un environnement non linéaire...
+----
+
+Mais dans tous les cas, l'**execution synchrone du code** et 
+la nature du procédural **pilotage par l'algo pas à pas** 
+montre immédiatement ses limites dans un **environnement non linéaire**...
+
+----
+
+Note : Une IHM, de par sa nature évenementielle (onclick, on...)
+ ce n'est pas du tout linéaire !
+
+----
+
+Ce qui nous amène ...
 
 ---
 
-## Les apports de la PF
+## Les apports de la PF, et le coeur du truc
+
+----
+
+### Des promesses
 
 ----
 
@@ -220,29 +249,212 @@ multithreading...)
 
 ----
 
-Un concept clé permettant d'unifier le modèle d'execution est l'utilisation de "contextes de travail",
-parfois présenté comme des "boites", dont le nom "technique" est **monade**.
-
-Une **monade** est un **container** de données et **aussi** un **executeur de code**.
+Le but ultime : adopter un mode de pensée et de codage universel, pouvant traiter 
+de la même façon tous les types de problèmes, tout en scalant parfaitement.
 
 ----
 
-todo exemples de monades
+### Oui mais comment, en pratique ?
 
 ----
 
-L'utilisation de monade permet de **décrire** le traitement que l'on souhaite réaliser 
-en **assemblant des fonctions unitaires**, via des **opérateurs** monadiques ...
+On présente toujours la programmation fonctionnelle comme l'utilisation
+de "fonctions" comme brique de base. On explique qu'il faut "composer"
+des fonctions "pures" pour réaliser des programmes robustes, etc etc...
 
 ----
 
-todo exemples d'opérateurs
+<pre><code>    
+    const square = (x:number):A => ...    
+    const foo = (a:A):B => ...    
+    const bar = (b:B):c => ...
+    
+    const result = bar(foo(square(42)));    
+</code></pre>
 
 ----
 
-puis de déclencher la résolution en consommant la valeur contnue dans la monade finale.
+*Ok, soit ; mais ça ne scale pas beaucoup çà, et puis l'asynchronisme...*
+
+Wait !
 
 ----
 
-Les opérateurs "universels" :
-- filter / map / reduce ...
+On parle aussi d'immutabilité et de "pas d'effets de bords".
+
+----
+
+Mais en fait, ces pratiques sont applicables en programmation procédurale
+avec les mêmes bénéfices attendus (code plus clair, etc...) 
+
+----
+
+So what ?
+
+----
+
+On ne parle que trop rarement du fait que la PF nous donne aussi la main
+sur **le mode d'execution** du programme, et ceci *de façon transparente* :
+un traitement peut devenir asynchrone "for free" sans presque rien changer...
+
+----
+
+La pierre Angula(i)r(e) de ce principe, et du mode de pensée qui en découle 
+(*celui qu'on ne met jamais assez en avant non plus*)
+est de raisonner en mode "Contexte", en mode "Boites".
+
+Le terme technique officiel étant "Monade"... 
+
+----
+
+Plutôt que d'*executer des fonctions*, *récupérer des valeurs*, les utiliser pour *executer
+d'autres fonctions en les composants*, on va *mettre les valeurs dans des boites*,
+*envoyer les fonctions dans ces boites*, et *composer les boites*...
+
+----
+
+On écrit plus un programme "pas à pas", on assemble une tuyauterie complexe qui va *canaliser un 
+flux d'information au moment voulu*...
+
+----
+
+&nbsp;
+
+        // Je mets des valeurs dans des boites...
+        
+        const array         = Array.from(1,2,3); // /!\ techniquement pas une Monade... mais proche 
+        const maybe         = Maybe.fromNullable(getContrat());
+        const observable    = Observable.of(42);
+
+----
+
+&nbsp;
+
+        // J'envoie une fonction dans la boite...
+        
+        const array2        = array.map(x => x + 1);
+        const maybe2        = maybe.map(c => c.getSouscripteur());
+        const observable2   = observable.pipe(map(x => x + 1));
+
+----
+
+Mémo : `map` **n'éxecute rien** (dans le principe...) : celà crée juste une **nouvelle boite**
+ programmée pour 'executer' cette fonction **plus tard**, *si besoin* sur les datas précédents.
+
+----
+
+Mémo 2 : `map` permet de réaliser la **composition de fonctions dynamiquement** sans execution !  
+
+----
+
+&nbsp;
+
+        // Je compose des boites
+        
+        // -- Array en javascript ne dispose pas de l'opérateur de composition
+
+        // où `getContratNH` renvoit un Maybe<Contrat>
+        const maybe3        = maybe2.flatMap(s => getContratNH(s));
+
+        // où `getTicketById` renvoit un Maybe<Ticket>
+        const observable3   = observable2.pipe(flatMap(x => getTicketById(x)));
+
+----
+
+Mémo : `flatMap` **n'éxecute rien** (dans le principe) : celà crée juste une **nouvelle boite**
+ programmée pour combiner / "applatir" des contextes entre eux (flatMap = map + flatten)
+
+----
+
+Mémo 2 : `flatMap` permet de réaliser la **composition de contextes** dynamiquement.  
+
+----
+
+`map` + `flatMap` : composition de fonction + composition de contextes ! 
+
+----
+
+Avec ces deux opérateurs, vous pouvez décrire (en théorie) n'importe quel programme, puisque vous pouvez
+composez les deux blocs fondamentaux de la programmation : fonction et execution de fonction !
+
+----
+
+
+Ce concept clé permet d'**unifier le modèle d'écriture du programme**, quel qu'en soit 
+**le modèle d'execution**.
+
+L'"abstraction" de classe de l'univers objet monte d'un cran avec l'**abstraction du mode
+d'execution** porté par **le type de monade utilisé** !
+
+----
+
+*Ok, ok... mais comment je déclenche l'**execution** de toute la chaine ?* ?
+
+----
+
+Haem... en fait...en *théorie*... vous ne pouvez pas ! 😅
+
+----
+
+En effet, le concept de Monad ne fournit aucun moyen "universel" d'extraire une valeur
+... tout simplement car il n'y en a pas !
+
+----
+
+Forcément, il va bien falloir faire quelque chose avec le résultat du programme composé...
+
+----
+
+Du coup chaque concept va proposer "son" opérateur d'extraction de valeur
+
+----
+
+&nbsp;
+
+        // extraction de valeur
+        
+        // -- Array en javascript execute en fait tout de suite les `map`... :\
+        maybe3.get();
+        observable3.subscribe(result => ...);
+
+---
+
+## SO ??
+
+----
+
+Si on prend comme modèle mental un modèle à base de 'boites' pour travailler avec 
+des types monadiques, on s'en sort en général plutôt bien.
+
+----
+
+Avant d'écrire une version "fonctionelle monadique" du problème précédent, 
+faisons donc le tour "sur papier" !
+
+
+----
+
+Evol !
+
+> Les produits sont renvoyés par un appel au backend via un Observable<Array<Produit>> !
+
+----
+
+Il faut donc :
+- récupérer les produits
+- ne garder que ceux qui concerne les lots qui nous intéressent
+- pour chaque produit, récupérer le prix
+- calculer le prix total pour chaque produit
+- appliquer la reduction en fonction du code lot
+- afficher la valeur totale !
+
+<small>Voilà aussi pourquoi on code en "procédural"...</small>
+
+----
+
+> Présentation du diagramme...
+
+----
+
+> Présentation du code ...
+
