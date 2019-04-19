@@ -388,24 +388,26 @@ d'execution** porté par **le type de monade utilisé** !
 
 ----
 
-*Ok, ok... mais comment je déclenche l'**execution** de toute la chaine ?* ?
+*Ok, ok... mais comment je récupère la valeur finale ?* ?
 
 ----
 
-Haem... en fait...en *théorie*... vous ne pouvez pas ! 😅
+Haem... en fait...en *théorie*... vous ne *pouvez pas* récupérer de *valeur finale* ! 😅
 
 ----
 
-En effet, le concept de Monad ne fournit aucun moyen "universel" d'extraire une valeur
-... tout simplement car il n'y en a pas !
+En effet, le concept de Monad ne décrit qu'une façon de composer
+des fonctions et des contextes... pas d'en "extraire" quelque chose !
+
 
 ----
 
-Forcément, il va bien falloir faire quelque chose avec le résultat du programme composé...
+Alors forcément, il va bien falloir faire quelque chose avec le résultat du programme composé...
 
 ----
 
-Du coup chaque concept va proposer "son" opérateur d'extraction de valeur
+Chaque concept monadique va (peut !) proposer son / ses opérateurs spécifiques pour 
+executer le traitement composé, la technique va donc dépendre du type.
 
 ----
 
@@ -414,8 +416,17 @@ Du coup chaque concept va proposer "son" opérateur d'extraction de valeur
         // extraction de valeur
         
         // -- Array en javascript execute en fait tout de suite les `map`... :\
-        maybe3.get();
+
+        maybe3.get(); // "retourne" la valeur, pour faire du procédural..
+        maybe3.foreach(value => ...);
+
         observable3.subscribe(result => ...);
+        observable3.pipe(tap(result => ...));
+
+
+----
+
+
 
 ---
 
@@ -425,6 +436,8 @@ Du coup chaque concept va proposer "son" opérateur d'extraction de valeur
 
 Si on prend comme modèle mental un modèle à base de 'boites' pour travailler avec 
 des types monadiques, on s'en sort en général plutôt bien.
+
+<small>Attention, ce concept est théoriquement "faux"... mais il marche bien en pratique.</small>
 
 ----
 
@@ -436,7 +449,7 @@ faisons donc le tour "sur papier" !
 
 Evol !
 
-> Les produits sont renvoyés par un appel au backend via un Observable<Array<Produit>> !
+> Les produits sont renvoyés par un appel au backend via un Observable&lt;Array&lt;Produit>> !
 
 ----
 
