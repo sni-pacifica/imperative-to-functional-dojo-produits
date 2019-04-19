@@ -1,8 +1,8 @@
-import { Produit } from "./ModelProduit01"
-import { Log } from "./Log";
-import { of, forkJoin, Observable, from } from "rxjs";
-import { map, flatMap, tap } from "rxjs/operators";
-import { PriceService } from "./services/PriceService";
+import {Produit} from "../01/ModelProduit"
+import {Log} from "../Log";
+import {of, forkJoin, Observable, from} from "rxjs";
+import {map, flatMap, tap} from "rxjs/operators";
+import {PriceService} from "../services/PriceService";
 
 const priceService = new PriceService();
 
@@ -11,7 +11,6 @@ const priceForProduit = (produit: Produit) =>
 
 const produitEstRattacheAUnLot = (lots: Array<string>) => (produit: Produit) =>
   lots.find(_ => _ === produit.lot) != null
-
 
 // A ce moment là (code commenté suivant), plusieurs possibilités s'offrent à nous ...
 //
@@ -77,17 +76,17 @@ const totalPriceForProduitWithReductionsApplied = (produit: Produit): Observable
 const sumValues = (values: Array<number>) => values.reduce((total, next) => total + next, 0);
 
 /*
-  Remarquez que si l'on 'ignore' les operateurs de combinaisons monadiques et qu'on se concentre sur les fonctions "métier", la logique globale est très bien mise en avant !
+  Remarquez que si l'on 'ignore' les operateurs de combinaisons monadiques
+  et qu'on se concentre sur les fonctions "métier"...
+  la logique globale est très bien mise en avant !
 */
-export const prixTotalEnsembleProduitsPourLotsAvecDecoteAsync = (
-  produitsObs: Observable<Array<Produit>> = of([]),
-  lots: Array<string> = []
-): Observable<number> =>
-  produitsObs.pipe(
-    flatMap(
-      prixTotalEnsembleProduitsPourLotsAvecDecote(lots)
-    )
-  );
+export const prixTotalEnsembleProduitsPourLotsAvecDecoteAsync =
+  (produitsObs: Observable<Array<Produit>> = of([]), lots: Array<string> = []): Observable<number> =>
+    produitsObs.pipe(
+      flatMap(
+        prixTotalEnsembleProduitsPourLotsAvecDecote(lots)
+      )
+    );
 
 export const prixTotalEnsembleProduitsPourLotsAvecDecote =
   (lots: Array<string>) =>
@@ -103,19 +102,3 @@ export const prixTotalEnsembleProduitsPourLotsAvecDecote =
           sumValues
         )
       )
-
-// D'ailleurs en forcant le trait et en jouant sur la formatage...
-/*export const prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBis = (
-  produitsObs: Observable<Array<Produit>> = of([]),
-  lots: Array<string> = []
-): Observable<number> =>
-  produitsObs.pipe(flatMap(produits => forkJoin(
-    produits.filter(
-      produitEstRattacheAUnLot(lots)
-    ).map(
-      totalPriceForProduitWithReductionsApplied
-    )
-  ).pipe(map(
-    sumValues
-  ))));*/
-

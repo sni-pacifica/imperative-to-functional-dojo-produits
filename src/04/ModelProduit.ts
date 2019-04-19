@@ -1,6 +1,5 @@
-import { Produit } from "./ModelProduit01"
-import { Log } from "./Log";
-import { PriceService } from "./services/PriceService";
+import {Produit} from "../01/ModelProduit"
+import {PriceService} from "../services/PriceService";
 
 const priceService = new PriceService();
 

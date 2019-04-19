@@ -1,5 +1,4 @@
-import { Produit } from "./ModelProduit01"
-import { Log } from "./Log";
+import {Produit} from "../01/ModelProduit"
 
 export const prixTotalEnsembleProduitsPourLotsAvecDecote = (
   produits: Array<Produit> = [],

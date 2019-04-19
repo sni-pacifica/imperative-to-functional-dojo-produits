@@ -1,6 +1,6 @@
 import { of, Observable } from "rxjs";
 import { delay } from "rxjs/operators";
-import { Produit } from "../ModelProduit01";
+import { Produit } from "../01/ModelProduit";
 
 export class ProduitsService {
 

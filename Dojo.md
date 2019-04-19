@@ -118,7 +118,7 @@ programme "trivial" en mode procédural
 
 https://stackblitz.com/edit/typescript-bufz3d
 
-ModelProduit00.ts
+ModelProduit.ts
 
 cf. fonction 'total'
 
