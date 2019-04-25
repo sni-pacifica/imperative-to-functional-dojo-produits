@@ -48,13 +48,9 @@ const reduceAmountByPercent =
     (amount: number) =>
       amount - ((amount / 100) * percent)
 
-const reduceBy10Percent = reduceAmountByPercent(10);
-
-const reduceBy15Percent = reduceAmountByPercent(10);
-
 const applyReductionIFNeeded = (product: Produit, amount: number) =>
-  (endsWith("-ABC")(product.lot)) ? reduceBy10Percent(amount) :
-    (endsWith("-XYZ")(product.lot)) ? reduceBy15Percent(amount) :
+  (endsWith("-ABC")(product.lot)) ? reduceAmountByPercent(10)(amount) :
+    (endsWith("-XYZ")(product.lot)) ? reduceAmountByPercent(15)(amount) :
       amount;
 
 const totalPriceForProduitWithReductionsApplied = (produit: Produit): Observable<number> =>

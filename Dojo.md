@@ -1,5 +1,11 @@
 <style>
-    code { width : 110%; height : 110%; }
+.reveal pre {
+    box-shadow : 0px 0px 0px;
+}
+    .reveal pre code { 
+    width : 130%; height : 500px !important; position:relative; left : -50px; top : -50px;
+        max-height: 1000px !important;
+    }
     p, li { font-size : .8em !important; }
     img { border : 0px !important; background : none !important;}
 	strong { color : #F58 }
@@ -10,20 +16,108 @@
 
 # Du procédural au fonctionnel
 
-### ...petite séance de révisions
+### ...petite séance de "révisions"
 
 ----
 
-Nous avons abordés plusieurs fois les paradigmes fonctionnels lors des sessions.
+Nous avons abordés plusieurs fois des principes et des "patterns" de programmation
+ fonctionnele lors des sessions.
 
-Nous avons découvert un certain nombre d'aspects (immutabilité, effets de bords...) et mis en oeuvre quelques techniques
-à travers divers exemples et technos (composition de fonction, monades, rxjs...).
+Il est temps de refaire une passe sur quelques principes, mais avec un angle et un niveau
+ d'abstraction peu souvent abordé / mis en avant...
 
-Aujourd'hui, on rebalaye le modèle de pensée fonctionnel à travers un exemple "trivial" !
+---
+
+## Rappels : les principes de base
 
 ----
 
-C'est *exactement* le moment de dire "Attend, stop, là ce point là, je ne saisi vraiment pas bien..."
+- Penser **fonction** : c'est LA brique de base
+    - "fonction" est un type de variable
+    - une fonction peut "recevoir" ou "renvoyer" des fonctions
+    - une fonction ne doit générer *aucun effet de bord*
+    - une fonction doit *toujours "renvoyer" quelque chose*
+
+----
+
+- Les fonctions doivent-êtres les plus courtes possibles, et ne faire qu'une seule chose !
+
+----
+
+- Chaque ligne de code devrait être une déclaration de fonction...
+    - ou une composition !
+
+----
+
+- Comme chaque ligne de code doit avoir une valeur, les if(), for() ... sont à
+ proscrire
+
+----
+
+- Pour "boucler" (si besoin), on fait appel à la récursivité
+    - ... où on utilise une structure de donnée récursive (tableau...)
+
+----
+
+- Avec nos fonctions, on manipule des données typées
+    - idéalement, *immutables*
+
+----
+
+
+- Une fonction est un "convertisseur" entre les types d'entrée et le type de sortie :
+    - string -> number
+    - (number, number) -> number
+    - Personne -> contrat
+
+----
+
+- Et enfin...
+    - un programme doit-être une composition de fonctions...
+    - ... dont la fonction "terminale" doit-être la seule autorisée à effectuer un effet de bord.
+
+----
+&nbsp;
+
+    afficheTotal(
+        convertisDevises(
+            EUR,
+            DOLLAR,
+            getDebits(
+                getContrats(
+                    getClientID(
+                        "DUPONT Jean"
+                    )
+                )
+            )
+        )
+    )
+    
+
+---
+
+## Mais ça ne suffit pas !
+
+----
+
+Bien sûr que ca ne suffit pas.
+
+On le voit bien : la composition de fonction, c'est "élégant", mais ça ne compose que très 
+moyennement...
+
+----
+
+... tellement moyennement qu'il suffit d'ajouter une promise la dedans, un observable,
+un tableau de données mal placé, où une petite gestion d'exception pour que ça soit "la cata".
+
+----
+
+LA solution, on en a déjà parlé : c'est bien sûr d'avoir recour au "boîtes" !
+
+----
+
+Mais avant de reparler de ces fameuses boites, prenons un peu de recul sur un aspect fondamental...
+
 
 ---
 
@@ -31,13 +125,13 @@ C'est *exactement* le moment de dire "Attend, stop, là ce point là, je ne sais
 
 ----
 
-Parce que en réalité, la PF, c'est **avant tout le reste** un **moyen de contrôler le flot d'execution** de notre programme, mais de façon "transparente", sans *goto*, sans *if*, sans ...
+Parce que en réalité, la PF, c'est **avant tout un moyen de contrôler le flot d'execution** de notre programme, 
+de façon <small>presque</small> "transparente", sans *goto*, sans *if*, sans branchements complexes..
 
 ----
 
-La programmation fonctionnelle nous invite à décrire et 
-mettre en évidence le **"quoi faire"**
-avant le **"comment le faire"**.
+La programmation fonctionnelle , c'est décrire le **"quoi faire"**
+au lieu du **"comment le faire"**.
 
 ----
 
@@ -45,58 +139,92 @@ avant le **"comment le faire"**.
 
 ----
 
-## Programmation procédurale : le mode linéaire
+## Programmation procédurale : continuer, c'est tout droit !
 
 ----
 
-C'est le mode choisit pour apprendre à programmer - y compris et surtout chez les jeunes à travers Scratch et co - et c'est le mode qui perdure ensuite.
-
-----
-
-Ce mode de programmation impose une **modèle de pensée** beaucoup trop bas-niveau, qui s'**il permet de rapidement obtenir des résultats** n'est rééllement adapté (comprendre "qui ne se transforme pas en *[big ball of mud](http://www.laputan.org/mud/mud.html#BigBallOfMud)* rapidement") qu'à **un cas particulier de programme**, le traitement séquentiel mono-threadé.
+C'est le mode choisit (majoritairement) pour apprendre à programmer et c'est bien souvent le mode qui 
+perdure ensuite.
 
 ----
 
 Pourquoi ? Il faut se pencher sur le rapport entre le programme 
-**tel qu'il est écrit**, et la façon **dont il s'execute**.
+**tel qu'il est écrit**, et la façon **dont il s'execute** pour le comprendre...
 
 ----
  
-- le programme possède un **point d'entrée**, se **déroule**, puis se **termine**
-
-- "déroule" : 
-
-    - chaque instruction est **executée immédiatement**...
-    - ce qui **altère l'état de la mémoire** ...
-    - et ceci, **instruction après instruction**...
+(debut) -> instruction -> modification de mémoire -> instruction -> 
+modification de mémoire -> instruction -> (...) -> instruction -> (fin)
 
 ----
 
-(debut) -> instruction -> instruction -> instruction -> instruction -> (fin)
+Un programme procédural est, à l'image de la **carte perforée**, une 
+*succession d'ordres bien **ordonnés**, **linéaires**, déroulé par un automate possédant 
+un **état général** qui évolue de façon progressive au cour du temps*, là aussi, de façon linéaire...
 
 ----
 
-Un programme procédural est donc à l'image de la **carte perforée** une 
-**succession d'ordres ordonnés, linéaires, déroulé par un automate possédant un état qui évolue**
+**Ce qui est "écrit"** = **"littéralement ce qui va s'executer"**.
+
+Il sufit de suivre, de lire ligne à ligne...
 
 ----
 
-Donc, **ce qui est "écrit"** = **"ce qui va s'executer"**
+Ce qui impacte **évidemment** la façon dont on raisonne et on code : 
+en mode "reverse debugger", un mode de pensée linéaire, non pas "au jour le jour" mais
+"à la ligne à la ligne"...
 
 ----
 
-Ce qui impacte évidemment la façon dont on raisonne et on code : 
-j'appelle souvent ça coder en mode "reverse debugger" ... 
-on raisonne en permanence en mode "étape par étape",
-en présuposant d'un mode d'execution linéaire, d'un état tout juste précédent..
+Avantage(s) ? *Grosso-modo*, un seul **vrai** avantage... 
 
-Et donc, un mode de pensée linéaire...
-
-----
-
-Avantage(s) ? *Grosso-modo*, un seul... Un contrôle "manuel" de l'execution, où l'on maitrise
+Un contrôle "manuel" de l'execution, où l'on maitrise
 exactement le flot d'execution et les états successifs de la machine, permettant aux experts de "tuner" finement
-les comportements pour mettre en oeuvre telle ou telle optimisation technique.
+les comportements pour mettre en oeuvre telle ou telle optimisation technique...
+
+----
+&nbsp;
+
+    char *money(const char *src, char *dst)
+    {
+        const char *p = src;
+        char *q = dst;
+        size_t len;
+    
+        len = strlen(src);
+        switch (len % 3) {
+            do {
+                *q++ = ',';
+                case 0: *q++ = *p++;
+                case 2: *q++ = *p++;
+                case 1: *q++ = *p++;
+            } while (*p);
+        }
+        *q++ = 0;
+        return dst;
+    }
+
+
+----
+&nbsp; 
+
+    float Q_rsqrt( float number )
+    {
+        long i;
+        float x2, y;
+        const float threehalfs = 1.5F;
+    
+        x2 = number * 0.5F;
+        y  = number;
+        i  = * ( long * ) &y;                       // evil floating point bit level hacking
+        i  = 0x5f3759df - ( i >> 1 );               // what the fuck? 
+        y  = * ( float * ) &i;
+        y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+    //	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+    
+        return y;
+    }    
+
 
 ----
 
@@ -105,17 +233,14 @@ L'ennui et que cette approche "code" == "execution" ne "scale" absolument pas bi
 
 ----
 
-En sus, chaque développeurs instille "son" mode de pensée linéaire 
-dans le code (d'où les querelles incessantes sur le style de coding...); 
-et nous sommes tous +/- différents sur cet aspect !
+D'autant qu'un mode de pensée "linéaire", c'est très personnel (tout comme la façon d'indiquer son chemin)
+donc nécessitant un "décryptage" de la part du relecteur (voir de votre futur moi !)
 
-<small>Valable pour votre moi *du présent* et votre moi *du futur* aussi !</small>
-
-----
-
-En sus, en mode linéaire, le moindre "obstacle" sur le chemin provoque des détours et des contorsions qui grèvent lourdement la maintenabilité :
+Et ca manque cruellement d'abstraction de haut niveau !
 
 ----
+
+Et puis le mode linéaire, souffre autant voir plus des "obstacles" sur le chemin :
 
 - *Branchement conditionnels, boucles* ? "Pyramid of doom"
 - *Asynchronisme* ? Casse le flot des programmes (Pyramid of doom, again).
@@ -123,9 +248,16 @@ En sus, en mode linéaire, le moindre "obstacle" sur le chemin provoque des dét
 - *Complexité fonctionnelle* ? Code spagghetti, à la longue.
 
 ----
+RESUME :
 
-Allez, assez de théorie : travaillons un peu sur un petit
-programme "trivial" en **mode procédural**
+> Un mode d'execution "pas à pas" rend l'asynchronisme, le multithreading et la programmation
+> evenementielle compliquée à gérer, de par sa nature même.
+
+----
+
+Pour bien se remettre dans le bain, et aborder la PF sous cet angle "mode d'execution", 
+travaillons un peu sur un petit
+programme "trivial" en **mode procédural** dans un premier temps !
 
 ----
 
@@ -235,16 +367,19 @@ Ce qui nous amène ...
 
 ----
 
-### Des promesses
+### Des promesses, toujours des promesses
 
 ----
 
 La programmation fonctionnelle cherche à résoudre **tous** ces problèmes en nous
 fournissant :
-- un **mode de pensée** différent, **décorellé du mode d'execution**
-- des bonnes pratiques unitaires **adaptées à TOUS les modes d'executions** (asynchrone,
+- un **mode de pensée** différent, 
+    - **décorellé du mode d'execution**
+- des bonnes pratiques unitaires 
+    - **adaptées à TOUS les modes d'executions** (asynchrone,
 multithreading...)
-- des concepts et leurs implémentations destiné à faciliter l'assemblage 
+- des concepts et leurs implémentations 
+    - destiné à faciliter l'assemblage 
   de petits programmes unitaires **là aussi, décorellé du mode d'execution** 
 
 ----
@@ -280,22 +415,9 @@ Wait !
 
 ----
 
-On parle aussi d'immutabilité et de "pas d'effets de bords".
-
-----
-
-Mais en fait, ces pratiques sont applicables en programmation procédurale
-avec les mêmes bénéfices attendus (code plus clair, etc...) 
-
-----
-
-So what ?
-
-----
-
 On ne parle que trop rarement du fait que la PF nous donne aussi la main
-sur **le mode d'execution** du programme, et ceci *de façon transparente* :
-un traitement peut devenir asynchrone "for free" sans presque rien changer...
+sur **le mode d'execution** du programme, et ceci **de façon transparente** :
+un traitement peut devenir asynchrone, lazy, ... "for free" sans presque rien changer !
 
 ----
 
@@ -307,24 +429,26 @@ Le terme technique officiel étant "Monade"...
 
 ----
 
-Plutôt que d'*executer des fonctions*, *récupérer des valeurs*, les utiliser pour *executer
-d'autres fonctions en les composants*, on va *mettre les valeurs dans des boites*,
-*envoyer les fonctions dans ces boites*, et *composer les boites*...
+Plutôt que d'**executer des fonctions**, récupérer des valeurs, **pas à pas**,
+les utiliser pour **executer d'autres fonctions**, (*parfois* en les *composants* proprement), 
+on va **mettre des valeurs dans des boites**,
+**envoyer des fonctions dans ces boites**, et... 
+**composer les boites** !
 
 ----
 
-On écrit plus un programme "pas à pas", on assemble une tuyauterie complexe qui va *canaliser un 
-flux d'information au moment voulu*...
+... et ce sont les boites, savamment composées, qui vont se charger "d'executer" le code, quand il faudra.
 
 ----
 
 &nbsp;
 
-        // Je mets des valeurs dans des boites...
-        
-        const array         = Array.from(1,2,3); // /!\ techniquement pas une Monade... mais proche 
-        const maybe         = Maybe.fromNullable(getContrat());
-        const observable    = Observable.of(42);
+    // Je mets des valeurs dans des boites...
+      
+    const array         = Array.from(1,2,3); // /!\ techniquement pas une Monade 
+                                             // mais 'proche' 
+    const maybe         = Maybe.fromNullable(getContrat());
+    const observable    = Observable.of(42);
 
 ----
 
@@ -343,10 +467,6 @@ Mémo : `map` **n'éxecute rien** (dans le principe...) : celà crée juste une 
 
 ----
 
-Mémo 2 : `map` permet de réaliser la **composition de fonctions dynamiquement** sans execution !  
-
-----
-
 &nbsp;
 
         // Je compose des boites
@@ -356,7 +476,7 @@ Mémo 2 : `map` permet de réaliser la **composition de fonctions dynamiquement*
         // où `getContratNH` renvoit un Maybe<Contrat>
         const maybe3        = maybe2.flatMap(s => getContratNH(s));
 
-        // où `getTicketById` renvoit un Maybe<Ticket>
+        // où `getTicketById` renvoit un Observable<Ticket>
         const observable3   = observable2.pipe(flatMap(x => getTicketById(x)));
 
 ----
@@ -370,7 +490,7 @@ Mémo 2 : `flatMap` permet de réaliser la **composition de contextes** dynamiqu
 
 ----
 
-`map` + `flatMap` : composition de fonction + composition de contextes ! 
+`map` et `flatMap` : composition de fonction via la composition de contextes ! 
 
 ----
 
@@ -385,6 +505,140 @@ Ce concept clé permet d'**unifier le modèle d'écriture du programme**, quel q
 
 L'"abstraction" de classe de l'univers objet monte d'un cran avec l'**abstraction du mode
 d'execution** porté par **le type de monade utilisé** !
+
+----
+
+Petite exercice de mise en pratique trèèèèss simple...
+
+Identity, et sa version "Lazy" !
+
+----
+
+&nbsp;
+
+    export class Identity<T> {
+    
+      static of = <T>(t: T) => new Identity(t);
+    
+      private constructor(readonly t: T) { }
+    
+      map = <U>(f: (t: T) => U) : Identity<U> => ??? 
+
+    }
+    
+    const addOne = (x: number): number => x + 1;
+    console.info(
+        // Identity<number> -addOne-> Identity<number> -addOne-> Identity<number> 
+        Identity.of(42).map(addOne).map(addOne)
+    );
+
+<small>Codez la fonction map ! </small>
+
+----
+
+> solution
+
+----
+
+- L'appel à la fonction 'map' **execute immédiatement**
+ la fonction passée en paramètre sur la valeur.
+- c'est bien l'**instance de Monade qui effectue l'execution**.
+
+----
+
+Maintenant, comment transformer cette monade en version "lazy" ?
+
+> Lazy : code qui ne s'execute **que si celà est nécessaire**
+
+> Variable non lazy : 42
+
+> Variable 'lazy' : () => 42
+
+----
+
+&nbsp;
+
+    export class IdentityLazy<T> {
+    
+      static of = <T>(t: ???) => new IdentityLazy(t);
+    
+      private constructor(readonly t: ???) { }
+    
+      map = <U>(f: (t: T) => U) => ???
+    
+      get = (): T => ???
+    
+    }
+
+----
+
+&nbsp;
+
+    type Lazy<T> = () => T;
+    export class IdentityLazy<T> {
+    
+      static of = <T>(t: Lazy<T>) => new IdentityLazy(t);
+    
+      private constructor(readonly t: Lazy<T>) { }
+
+      // map = <U>(f: (t: T) => U) => Identity.of(
+      //   f(this.t)
+      // );
+
+      map = <U>(f: (t: T) => U) => IdentityLazy.of(
+        () => f(this.get())
+      );
+    
+      get = (): T => this.t();
+    
+    }
+---
+
+## SO ??
+
+----
+
+Si on prend comme modèle mental un modèle à base de 'boites' pour travailler avec 
+des types monadiques, on s'en sort en général plutôt bien.
+
+<small>Attention, ce concept est théoriquement "faux"... mais il marche bien en pratique.</small>
+
+----
+
+Avant de nous lancer dans l'écriture d'une version "fonctionelle monadique" du problème précédent, 
+faisons donc le tour "sur papier" !
+
+----
+
+Il faut donc :
+- récupérer les produits
+- ne garder que ceux qui concerne les lots qui nous intéressent
+- pour chaque produit, récupérer le prix
+- calculer le prix total pour chaque produit
+- appliquer la reduction en fonction du code lot
+- afficher la valeur totale !
+
+<small>Voilà aussi pourquoi on code en "procédural"...</small>
+
+----
+
+Sans oublier ... Evol !
+
+> Les produits sont renvoyés par un appel au backend via un Observable&lt;Array&lt;Produit>> !
+
+
+
+----
+
+> Présentation du diagramme...
+
+----
+
+> Présentation du code ...
+
+---
+
+# Et la valeur finale ?
 
 ----
 
@@ -425,49 +679,4 @@ executer le traitement composé, la technique va donc dépendre du type.
 
 
 ----
-
-
-
----
-
-## SO ??
-
-----
-
-Si on prend comme modèle mental un modèle à base de 'boites' pour travailler avec 
-des types monadiques, on s'en sort en général plutôt bien.
-
-<small>Attention, ce concept est théoriquement "faux"... mais il marche bien en pratique.</small>
-
-----
-
-Avant d'écrire une version "fonctionelle monadique" du problème précédent, 
-faisons donc le tour "sur papier" !
-
-
-----
-
-Evol !
-
-> Les produits sont renvoyés par un appel au backend via un Observable&lt;Array&lt;Produit>> !
-
-----
-
-Il faut donc :
-- récupérer les produits
-- ne garder que ceux qui concerne les lots qui nous intéressent
-- pour chaque produit, récupérer le prix
-- calculer le prix total pour chaque produit
-- appliquer la reduction en fonction du code lot
-- afficher la valeur totale !
-
-<small>Voilà aussi pourquoi on code en "procédural"...</small>
-
-----
-
-> Présentation du diagramme...
-
-----
-
-> Présentation du code ...
 
