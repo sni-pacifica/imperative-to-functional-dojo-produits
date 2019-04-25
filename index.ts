@@ -10,8 +10,9 @@ const logBlue = Log.logWithColor("#5588ff");
 */
 
 // Etape 00
-// import { Produit, produits, total } from "./src/00/ModelProduit";
-// logBlue("La valeur totale est : " + total(produits));
+import {produits, total} from "./src/00/ModelProduit";
+
+logBlue("La valeur totale est : " + total(produits));
 
 // Etape 01
 // import { Produit, produits, prixTotalEnsembleProduits } from "./src/01/ModelProduit";
@@ -32,16 +33,22 @@ const logBlue = Log.logWithColor("#5588ff");
 // import { prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy } from "./src/04/ModelProduit";
 // logBlue("La valeur totale est : " + prixTotalEnsembleProduitsPourLotsAvecDecoteAsyncBuggy(produits, ["lot1-XYZ"]));
 
+// Identity tests here
+// import {Identity} from "./src/monads/Identity";
+// console.info(
+//   Identity.of(42).map(addOne).map(addOne)
+// );
+
 // Etape functional
-import {prixTotalEnsembleProduitsPourLotsAvecDecoteAsync} from "./src/functional/ModelProduit";
-import {ProduitsService} from "./src/services/ProduitsService";
-
-let service = new ProduitsService();
-const computation = prixTotalEnsembleProduitsPourLotsAvecDecoteAsync(
-  service.getProduits(), ["lot1-XYZ"]
-)
-
-computation.subscribe(result => {
-  logBlue("La valeur totale est : " + result);
-});
+// import {prixTotalEnsembleProduitsPourLotsAvecDecoteAsync} from "./src/functional/ModelProduit";
+// import {ProduitsService} from "./src/services/ProduitsService";
+//
+// let service = new ProduitsService();
+// const computation = prixTotalEnsembleProduitsPourLotsAvecDecoteAsync(
+//   service.getProduits(), ["lot1-XYZ"]
+// )
+//
+// computation.subscribe(result => {
+//   logBlue("La valeur totale est : " + result);
+// });
 
